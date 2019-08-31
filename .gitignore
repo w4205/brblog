@@ -111,3 +111,4 @@ logs/*
 
 # secure
 secure.py
+dev.sqlite
