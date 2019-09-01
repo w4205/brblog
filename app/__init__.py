@@ -41,10 +41,10 @@ def register_template_contaxt(app):
         传入 current_user
         可避免每个视图函数都传入"""
         admin = Admin.query.first()
-        categories = Category.query.filter_by(status=1).order_by(Category.name).all()
-        links = Link.query.filter_by(status=1).order_by(Link.name).all()
+        categories = Category.query.filter_by().order_by(Category.name).all()
+        links = Link.query.filter_by().order_by(Link.name).all()
         if current_user.is_authenticated:
-            unread_comments = Comment.query.filter_by(status=1,reviewed=False).count()
+            unread_comments = Comment.query.filter_by(reviewed=False).count()
         else:
             unread_comments = None
         return dict(
@@ -72,7 +72,7 @@ def register_commands(app):
         click.echo('初始化数据库中...')
         db.create_all()
 
-        with db.auto_commit:
+        with db.auto_commit():
             admin = Admin.query.first()
             if admin is not None:
                 click.echo('管理员账号已存在,更新中...')
@@ -82,10 +82,13 @@ def register_commands(app):
                 click.echo('创建默认管理员数据中...')
                 admin = Admin(
                     username=username,
-                    blog_title='BRBLOG',
-                    blog_sub_title="No, I'm the real thing.",
-                    name='Admin',
-                    about='Anything about you.'
+                    blog_title='Br Blog',
+                    blog_sub_title="Genius only means hard-working all one's life.",
+                    name='Jack Zhang',
+                    about='''永不放弃是人生要成功的一大因素，
+            只要能够坚持，
+            锲而不舍，
+            终会到达成功的彼岸的。'''
                 )
                 admin.set_password(password)
                 db.session.add(admin)

@@ -33,7 +33,7 @@ def settings():
 @login_required
 def manage_post():
     page = request.args.get('page', default=1, type=int)
-    pagination = Post.query.filter_by(status=1).order_by(
+    pagination = Post.query.filter_by().order_by(
         Post.timestamp.desc()).paginate(page, per_page=current_app.config[
         'BRBLOG_MANAGE_POST_PER_PAGE'])
     posts = pagination.items
@@ -107,11 +107,11 @@ def manage_comment():
     page = request.args.get('page', default=1, type=int)
     per_page = current_app.config['BRBLOG_COMMENT_PER_PAGE']
     if filter_rule == 'unread':
-        filtered_comments = Comment.query.filter_by(status=1).filter_by(reviewed=False)
+        filtered_comments = Comment.query.filter_by(reviewed=False)
     elif filter_rule == 'admin':
-        filtered_comments = Comment.query.filter_by(status=1, from_admin=True)
+        filtered_comments = Comment.query.filter_by(from_admin=True)
     else:
-        filtered_comments = Comment.query.filter_by(status=1)
+        filtered_comments = Comment.query.filter_by()
 
     pagination = filtered_comments.order_by(
                  Comment.timestamp.desc()).paginate(page, per_page=per_page)

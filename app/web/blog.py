@@ -14,7 +14,7 @@ from . import web
 def index():
     page = request.args.get('page',default=1,type=int)
     per_page = current_app.config['BRBLOG_POST_PER_PAGE']
-    pagination = Post.query.filter_by(status=1).order_by(
+    pagination = Post.query.filter_by().order_by(
                  Post.timestamp.desc()).paginate(page, per_page)
     posts = pagination.items
     return render_template('blog/index.html', posts=posts, pagination=pagination)
@@ -38,11 +38,10 @@ def about():
 #
 @web.route('/category/<int:category_id>')
 def show_category(category_id):
-    category = Category.query.filter_by(
-        status=1,id=category_id).first_or_404()
+    category = Category.query.filter_by(id=category_id).first_or_404()
     page = request.args.get('page', default=1, type=int)
     per_page = current_app.config['BRBLOG_POST_PER_PAGE']
-    pagination = Post.query.filter_by(status=1).with_parent(category).order_by(
+    pagination = Post.query.filter_by().with_parent(category).order_by(
         Post.timestamp.desc()).paginate(page, per_page)
     posts = pagination.items
     return render_template('blog/category.html', category=category,
@@ -52,8 +51,7 @@ def show_category(category_id):
 
 @web.route('/post/<int:post_id>', methods=['GET', 'POST'])
 def show_post(post_id):
-    post = Post.query.filter_by(
-        status=1,id=post_id).first_or_404()
+    post = Post.query.filter_by(id=post_id).first_or_404()
     page = request.args.get('page', default=1, type=int)
     per_page = current_app.config['BRBLOG_COMMENT_PER_PAGE']
     pagination = Comment.query.with_parent(post).filter_by(

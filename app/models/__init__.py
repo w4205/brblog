@@ -1,8 +1,9 @@
 from contextlib import contextmanager
 from datetime import datetime
 
-from flask_sqlalchemy import SQLAlchemy as _SQLAlchemy
+from flask_sqlalchemy import SQLAlchemy as _SQLAlchemy, BaseQuery
 
+__all__ = ['db', 'Base']
 
 
 class SQLAlchemy(_SQLAlchemy):
@@ -18,7 +19,15 @@ class SQLAlchemy(_SQLAlchemy):
             self.session.rollback()    # 数据库回滚
             raise e
 
-db = SQLAlchemy()
+# 默认验证 status, 避免每次传入
+class Query(BaseQuery):
+    def filter_by(self, **kwargs):
+        if 'status' not in kwargs.keys():
+            kwargs['status'] = 1
+        return super(Query, self).filter_by(**kwargs)
+
+# 替换默认 query_class
+db = SQLAlchemy(query_class=Query)
 
 
 class Base(db.Model):
