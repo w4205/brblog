@@ -19,5 +19,5 @@ flask-debugtoolbar = "*"
 gunicorn = "*"
 flask-migrate = "*"
 
-[requires]
-python_version = "3.7"
+#[requires]
+#python_version = "3.7"

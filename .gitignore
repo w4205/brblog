@@ -112,3 +112,4 @@ logs/*
 # secure
 secure.py
 dev.sqlite
+brblog.py
